@@ -26,4 +26,15 @@ public class RecipesController : ControllerBase
         _recipes.Add(newRecipe);
         return Ok(newRecipe);
     }
+
+    [HttpPut("{id}")]
+    public ActionResult<Recipe> Update(int id, [FromBody] Recipe updateRecipe)
+    {
+        var existing = _recipes.FirstOrDefault(r => r.Id == id);
+        if (existing == null) return NotFound();
+        existing.Title = updateRecipe.Title;
+        existing.Image = updateRecipe.Image;
+        existing.Description = updateRecipe.Description;
+        return Ok(existing);
+    }
 }
