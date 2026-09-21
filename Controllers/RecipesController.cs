@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ReceptbokApi.Data;
 using ReceptbokApi.Models;
 
 namespace ReceptbokApi.Controllers;
@@ -7,34 +9,43 @@ namespace ReceptbokApi.Controllers;
 [Route("api/[controller]")]
 public class RecipesController : ControllerBase
 {
-    private static readonly List<Recipe> _recipes = new()
+    private readonly AppDbContext _context;
+    public RecipesController(AppDbContext context)
     {
-        new Recipe {Id = 1, Title = "Pannkakor", Image = "", Description = "Enkla och goda"},
-        new Recipe {Id = 2, Title = "Köttbullar", Image = "", Description = "Runda"},
-    };
+        _context = context;
+    }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Recipe>> GetAll()
+    public async Task<ActionResult<IEnumerable<Recipe>>> GetAll()
     {
-        return _recipes;
+        return await _context.Recipes.ToListAsync();
     }
 
     [HttpPost]
-    public ActionResult<Recipe> Create([FromBody] Recipe newRecipe)
+    public async Task<ActionResult<Recipe>> Create([FromBody] RecipeDto dto)
     {
-        newRecipe.Id = _recipes.Count == 0 ? 1 : _recipes.Max(r => r.Id) + 1;
-        _recipes.Add(newRecipe);
-        return Ok(newRecipe);
+        var recipe = new Recipe
+        {
+            Title = dto.Title,
+            Image = dto.Image,
+            Description = dto.Description,
+        };
+
+        _context.Recipes.Add(recipe);
+        await _context.SaveChangesAsync();
+
+    return Ok(recipe);
     }
 
     [HttpPut("{id}")]
-    public ActionResult<Recipe> Update(int id, [FromBody] Recipe updateRecipe)
+    public async Task<ActionResult<Recipe>> Update(int id, [FromBody] RecipeDto dto)
     {
-        var existing = _recipes.FirstOrDefault(r => r.Id == id);
+        var existing = await _context.Recipes.FindAsync(id);
         if (existing == null) return NotFound();
-        existing.Title = updateRecipe.Title;
-        existing.Image = updateRecipe.Image;
-        existing.Description = updateRecipe.Description;
+        existing.Title = dto.Title;
+        existing.Image = dto.Image;
+        existing.Description = dto.Description;
+        await _context.SaveChangesAsync();
         return Ok(existing);
     }
 }
