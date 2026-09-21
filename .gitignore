@@ -481,3 +481,7 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Uploaded recipe pictures
+wwwroot/uploads/*
+!wwwroot/uploads/.gitkeep

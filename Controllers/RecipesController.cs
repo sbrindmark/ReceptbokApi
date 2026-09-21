@@ -61,4 +61,25 @@ public class RecipesController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpPost("upload")]
+    public async Task<ActionResult> Upload(IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest("Ingen fil vald");
+
+        var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+        Directory.CreateDirectory(uploadsDir);
+
+        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+        var filePath = Path.Combine(uploadsDir, fileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        var url = $"{Request.Scheme}://{Request.Host}/uploads/{fileName}";
+        return Ok(new { url });
+    }
 }
