@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReceptbokApi.Data;
@@ -47,5 +48,17 @@ public class RecipesController : ControllerBase
         existing.Description = dto.Description;
         await _context.SaveChangesAsync();
         return Ok(existing);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var existing = await _context.Recipes.FindAsync(id);
+        if (existing == null) return NotFound();
+
+        _context.Recipes.Remove(existing);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
     }
 }
