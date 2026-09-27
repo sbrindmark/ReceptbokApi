@@ -2,15 +2,15 @@
 
 REST-API för receptboken, byggt med ASP.NET Web API och EF Core + SQLite. Hanterar recept (CRUD) och bilduppladdning.
 
-Frontend-repo: https://github.com/sbrindmark/receptbok
+Frontend-repo: https://github.com/sbrindmark/ReceptbokFrontend
 
 ## Teknik 
 - [.NET 10 SDK](https://dotnet.microsoft.com/)
 
 ## Kom igång
 ```bash
-git clone https://github.com/sbrindmark/ReceptbokApi.git
-cd ReceptbokApi
+git clone https://github.com/sbrindmark/ReceptbokBackend.git
+cd ReceptbokBackend
 dotnet run
 ```
 API:t startar på `http://localhost:5148`. Databasen (SQLite) skapas automatiskt vid start – inga extra kommandon behövs. Swagger finns på `http://localhost:5148/swagger`.

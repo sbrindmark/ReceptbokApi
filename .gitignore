@@ -485,3 +485,7 @@ $RECYCLE.BIN/
 # Uploaded recipe pictures
 wwwroot/uploads/*
 !wwwroot/uploads/.gitkeep
+
+# SQLite temp files
+*.db-shm
+*.db-wal
