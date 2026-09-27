@@ -82,4 +82,12 @@ public class RecipesController : ControllerBase
         var url = $"{Request.Scheme}://{Request.Host}/uploads/{fileName}";
         return Ok(new { url });
     }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Recipe>> GetById(int id)
+    {
+        var recipe = await _context.Recipes.FindAsync(id);
+        if (recipe == null) return NotFound();
+        return recipe;
+    }
 }
